@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%B7%3C/text%3E%3C/svg%3E" />
+    <title>pigs_in_clover_prototype</title>
+  </head>
+  <body>
+    <div id="stage">
+      <header id="masthead">
+        <h1>pigs in clover</h1>
+        <p>прототип для смарт-часов · управление: <b>тап</b> + <b>колесо</b></p>
+      </header>
+
+      <div id="watch">
+        <div id="crown" title="Колесо — скролл мыши или потяни вверх/вниз"></div>
+        <div id="crown-meter">
+          <div class="cm-track"><div class="cm-band"></div><div class="cm-marker"></div></div>
+          <div class="cm-val">0.00</div>
+          <div class="cm-label">об/с</div>
+        </div>
+        <div id="side-btn"></div>
+        <div id="bezel">
+          <div id="screen">
+            <canvas id="cv"></canvas>
+            <div id="overlays"></div>
+          </div>
+        </div>
+      </div>
+
+      <footer id="legend">
+        <div><kbd>тап</kbd> / <kbd>пробел</kbd> — действие</div>
+        <div><kbd>колесо</kbd> / <kbd>↑</kbd><kbd>↓</kbd> / тяни колесо — вращение</div>
+      </footer>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
