@@ -2,6 +2,8 @@ import "./style.css"
 
 import { CROWN, SCREEN } from "./config"
 import { createCrown } from "./input"
+import { createRenderer } from "./render"
+import { createSim, resetSim, simTap, simUpdate } from "./sim"
 
 const canvas = document.getElementById("cv") as HTMLCanvasElement
 const screen_el = document.getElementById("screen") as HTMLDivElement
@@ -34,32 +36,23 @@ resize()
 window.addEventListener("resize", resize)
 
 const crown = createCrown(screen_el, knob)
+const sim = createSim()
+const render = createRenderer()
 
-const tap = () => {}
-
-screen_el.addEventListener("pointerdown", () => tap())
+screen_el.addEventListener("pointerdown", () => simTap(sim))
 
 window.addEventListener("keydown", (e) => {
   if (e.code === "Space" || e.code === "Enter") {
     e.preventDefault()
-    tap()
+    simTap(sim)
   }
+  if (e.key === "r" || e.key === "R" || e.key === "к" || e.key === "К") resetSim(sim)
 })
 
 let paused = false
 document.addEventListener("visibilitychange", () => {
   paused = document.hidden
 })
-
-const update = (_dt: number) => {}
-
-const render = () => {
-  ctx.fillStyle = "rgba(255,255,255,0.35)"
-  ctx.font = "13px ui-monospace, monospace"
-  ctx.textAlign = "center"
-  ctx.fillText("экран пуст — ждём игру", SCREEN.w / 2, SCREEN.h / 2)
-  ctx.fillText(`обороты: ${fmt(crown.rotations)}`, SCREEN.w / 2, SCREEN.h / 2 + 22)
-}
 
 let last = performance.now()
 
@@ -68,13 +61,15 @@ const frame = (now: number) => {
   last = now
 
   crown.update(dt)
-  if (!paused) update(dt)
+  if (!paused) simUpdate(sim, crown.rps, dt)
 
   ctx.clearRect(0, 0, SCREEN.w, SCREEN.h)
-  render()
+  render(ctx, sim)
   syncCrownMeter()
 
   requestAnimationFrame(frame)
 }
 
 requestAnimationFrame(frame)
+
+;(window as any).__sim = sim
