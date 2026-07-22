@@ -5,7 +5,7 @@ import type { Sim } from "./sim"
 const CX = SCREEN.w / 2
 const CY = SCREEN.h / 2
 
-const drawBall = (ctx: CanvasRenderingContext2D, s: Sim) => {
+const drawBall = (ctx: CanvasRenderingContext2D, s: Sim, tex: HTMLCanvasElement) => {
   const scale = s.phase === "fall" ? Math.max(0, 1 - s.fall_t / 0.45) : s.phase === "won" ? 0 : 1
   if (scale <= 0) return
 
@@ -44,6 +44,14 @@ const drawBall = (ctx: CanvasRenderingContext2D, s: Sim) => {
   base.addColorStop(1, "#343c45")
   ctx.fillStyle = base
   ctx.fillRect(-r, -r, r * 2, r * 2)
+
+  ctx.save()
+  ctx.globalAlpha = 0.32
+  ctx.scale(0.35, 0.35)
+  ctx.rotate(s.theta)
+  ctx.translate(-s.x, -s.y)
+  ctx.drawImage(tex, -TEX_PAD, -TEX_PAD)
+  ctx.restore()
 
   const band = ctx.createLinearGradient(0, -r * 0.15, 0, r * 0.6)
   band.addColorStop(0, "rgba(58, 67, 78, 0)")
@@ -87,10 +95,6 @@ const drawBall = (ctx: CanvasRenderingContext2D, s: Sim) => {
   ctx.arc(-r * 0.3, -r * 0.44, r * 0.52, 0, Math.PI * 2)
   ctx.fill()
 
-  ctx.fillStyle = "rgba(255, 255, 255, 0.4)"
-  ctx.beginPath()
-  ctx.ellipse(r * 0.4, -r * 0.08, r * 0.08, r * 0.2, 0.35, 0, Math.PI * 2)
-  ctx.fill()
 
   ctx.restore()
 }
@@ -194,7 +198,7 @@ export const createRenderer = () => {
     ctx.drawImage(tex, -TEX_PAD, -TEX_PAD)
     ctx.restore()
 
-    drawBall(ctx, s)
+    drawBall(ctx, s, tex)
     drawPointer(ctx, s)
     drawMinimap(ctx, s)
     drawWin(ctx, s)
